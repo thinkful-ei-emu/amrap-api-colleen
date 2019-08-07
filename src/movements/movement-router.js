@@ -34,4 +34,25 @@ movementRouter
   })
 })
 })
+movementRouter
+.route('/:movementId')
+.all((req, res, next)=> {
+  MovementService.getMovementById(req.app.get('db'), req.params.movementId)
+  .then(movement =>{
+    if(!movement){
+      return res.status(400).json({error: 'Movement does not exist'})
+    }
+    res.movement = movement;
+    next()
+  })
+  .catch(next)
+})
+.get((req, res)=>{
+  return res.json({
+    movement_name : res.movement.movement_name,
+    body_part: res.movement.body_part,
+    equipment: res.movement.equipment,
+    reps: res.movement.reps
+  })
+})
 module.exports = movementRouter

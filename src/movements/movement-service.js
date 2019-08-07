@@ -17,6 +17,13 @@ const MovementService = {
     .into('movements')
     .returning('*')
     .then(([movement]) => movement)
+  },
+  getMovementById(db, movementId){
+    return db
+    .select('*')
+    .from('movements')
+    .where('id', movementId)
+    .first()
   }
 }
 
