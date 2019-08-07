@@ -6,6 +6,7 @@ const helmet = require('helmet')
 const { NODE_ENV } = require('./config')
 const usersRouter = require('./users/users-router')
 const authRouter = require('./auth/auth-router')
+const movementRouter = require('./movements/movement-router')
 const app = express()
 //if production, want morgan to change based on prod vs dev
 const morganOption = (NODE_ENV === 'production' 
@@ -18,6 +19,7 @@ const morganOption = (NODE_ENV === 'production'
  
  app.use('/api/users', usersRouter)
  app.use('/api/auth', authRouter)
+ app.use('/api/movements', movementRouter)
  app.use(function errorHandler(error, req, res, next){
    let response
    if (NODE_ENV === 'production') {
