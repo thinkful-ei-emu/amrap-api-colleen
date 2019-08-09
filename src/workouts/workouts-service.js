@@ -2,13 +2,7 @@ const WorkoutsService = {
   getAllWorkouts(db) {
     return db.from("workouts").select("*");
   },
-  formEquipmentSearch(searchTermObj) {
-    // let query = `WHERE equipment SIMILAR TO `;
-    // Equipment example: "barbell dumbell freeweight"
-    // Desired string: "barbell|dumbell|freeweight"
 
-    // SELECT * FROM movements WHERE equipment SIMILAR TO '%bell%' OR equipment IS NULL ORDER BY RANDOM() LIMIT (floor(random()*(5-3+1))+3);
-  },
   search(db, searchObj) {
     let equipment = (searchObj.equipment).replace(" ", "|");
     let num_exercises = Math.floor(Math.random() * (5 - 3 + 1) + 3);
@@ -19,8 +13,6 @@ const WorkoutsService = {
     .orWhereNull('equipment')
     .orderByRaw('RANDOM()')
     .limit(num_exercises);
-    
-
   },
   getWorkoutByUserId(db, user_id) {
     return db("workouts")
@@ -70,20 +62,36 @@ const WorkoutsService = {
         {}
       )
     );
-    console.log(result);
     return result
-  }
+  },
+insertNewWorkoutIntoWorkouts(db, newWorkout){
+  return db
+  .insert(newWorkout)
+  .into('workouts')
+  .returning('*')
+  .then(rows=>rows[0])
+},
+
 };
 
 module.exports = WorkoutsService;
 
-/* SELECT movements.movement_name, movements.reps, movements.equipment
-FROM movements, workouts
-WHERE workouts.movement_1 = movements.id
-AND workouts.movement_2 = movements.id
-AND workouts.id = 1;
+/*
+1.
+   INSERT INTO workouts 
+amrap-> (user_id, workout_length) //from req.body=> array of two objects
+amrap-> VALUES
+amrap-> (2, 30);
+INSERT 0 1
 
-SELECT * FROM workouts
-WHERE workouts.id = 1
+2. find the workout id
+amrap=> SELECT id FROM workouts WHERE user_id = 2 AND workout_length = 30;  
+ id 
+----
+  5
+(1 row)
 
-SELECT * FROM workouts AS temptable WHERE temptable.user_id = 1; */
+
+3. insert the movement ids
+amrap=> INSERT INTO workouts_movements(workout_id, movement_id)
+amrap-> VALUES  */

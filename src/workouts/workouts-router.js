@@ -23,15 +23,11 @@ WorkoutsService.getAllWorkouts(req.app.get('db'))
       .json({error: `Missing ${key} in request body`})
     }
   }
-  // let query = WorkoutsService.formEquipmentSearch(searchObj)
   WorkoutsService.search(req.app.get('db'), searchObj)
   .then(result =>{
     console.log(result);
     return res.status(201).json(result)
   })
-   // let search = WorkoutsService.organizeRandomOutput(result)
-  
- // })
  
 })
 
@@ -49,11 +45,24 @@ workoutsRouter
   .catch(next)
 })
 .get(jsonBodyParser,(req, res)=>{
-  console.log(res.workouts)
  let workouts= WorkoutsService.organizeWorkouts(res.workouts)
     return res.json(workouts)
-  
-  
+})
+.post(jsonBodyParser, (req, res)=>{
+const {workout_length, user_id, movements}=req.body
+let newWorkoutRow = { workout_length, user_id}
+let newWorkoutMovements = { movements }
+for(const[key, value] of Object.entries(newWorkout)){
+  if (value == null){
+    return res
+    .status(400)
+    .json({error: `Missing ${key} in request body`})
+  }
+}
+WorkoutsService.insertNewWorkoutIntoWorkouts(req.app.get('db'), newWorkout)
+.then(newWorkout =>{
+  WorkoutsService.insertWorkoutMovementsIntoWorkoutsMovements(req.app.get('db'), newWorkoutMovements)
+})
 })
 
 module.exports = workoutsRouter

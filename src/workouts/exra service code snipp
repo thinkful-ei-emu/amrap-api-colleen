@@ -172,3 +172,61 @@ function arrayIdLengthParse(array){
       )
       .where({ user_id });
   }, */
+
+
+
+  formEquipmentSearch(searchTermObj) {
+    let query = `WHERE equipment SIMILAR TO `;
+    let equipment = searchTermObj.equipment;
+    let equipstr = "'";
+    let arrayEquip = [];
+
+    // Equipment example: "barbell dumbell freeweight"
+    // Desired string: "barbell|dumbell|freeweight"
+    if (!equipment.includes(" ")) {
+      arrayEquip.push(equipment);
+    } else {
+      arrayEquip = equipment.split(" ");
+    }
+
+    for (i = 0; i < arrayEquip.length; i++) {
+      if (i == arrayEquip.length - 1) {
+        equipstr += `${arrayEquip[i]}'`;
+      } else {
+        equipstr += arrayEquip[i] + "|";
+      }
+    }
+    let query = searchForm + equipstr + `OR equipment IS NULL ORDER BY RANDOM() LIMIT (floor(random()*(5-3+1))+3)`
+
+//SELECT * FROM movements WHERE equipment SIMILAR TO '%bell%' OR equipment IS NULL ORDER BY RANDOM() LIMIT (floor(random()*(5-3+1))+3);
+    return query
+  },
+
+    formEquipmentSearch(searchTermObj) {
+    // let query = `WHERE equipment SIMILAR TO `;
+    // Equipment example: "barbell dumbell freeweight"
+    // Desired string: "barbell|dumbell|freeweight"
+
+    // SELECT * FROM movements WHERE equipment SIMILAR TO '%bell%' OR equipment IS NULL ORDER BY RANDOM() LIMIT (floor(random()*(5-3+1))+3);
+  },
+
+
+
+1.
+   INSERT INTO workouts 
+amrap-> (user_id, workout_length) //from req.body=> array of two objects
+amrap-> VALUES
+amrap-> (2, 30);
+INSERT 0 1
+
+2. find the workout id
+amrap=> SELECT id FROM workouts WHERE user_id = 2 AND workout_length = 30;  
+ id 
+----
+  5
+(1 row)
+
+
+3. insert the movement ids
+amrap=> INSERT INTO workouts_movements(workout_id, movement_id)
+amrap-> VALUES 
