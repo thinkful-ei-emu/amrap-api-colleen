@@ -29,7 +29,21 @@ const WorkoutsService = {
       )
       .where({ user_id });
   },
-
+  getNewWorkout(db, workout_id){
+    return db("workouts")
+    .join("workouts_movements", "workout_id", "workouts.id")
+    .join("movements", "movement_id", "movements.id")
+    .select(
+      "date_created",
+      "workout_length",
+      "workout_id",
+      "movement_name",
+      "movement_id",
+      "equipment",
+      "reps"
+    )
+    .where({ workout_id });
+  },
   organizeWorkouts(workouts) {
     let list = workouts.reduce(function(r, a) {
       r[a.workout_id] = r[a.workout_id] || [];
@@ -55,7 +69,7 @@ const WorkoutsService = {
           c[workout_id].movements = c[workout_id].movements.concat(
             Array.isArray(movement_name)
               ? movement_name
-              : [{ name: movement_name, reps, equipment, movement_id }]
+              : [{ movement_name: movement_name, reps, equipment, movement_id }]
           );
           return c;
         },
@@ -70,6 +84,23 @@ insertNewWorkoutIntoWorkouts(db, newWorkout){
   .into('workouts')
   .returning('*')
   .then(rows=>rows[0])
+},
+insertNewWorkoutIntoWorkoutsMovements(db, id, newWorkoutMovements){
+  //newWorkoutMovements: array of objects
+  //desired for each newWorkoutMovement: [{ workout_id: , movement_id: }]
+  let workoutId = id
+  console.log('INPUT OF MOVEMENTS', newWorkoutMovements.movements)
+
+let newWorkoutsMovementsArray = newWorkoutMovements.movements.map(mvt =>{
+return { workout_id: workoutId, movement_id: mvt.id} 
+})
+console.log('NEW WORKOUTS MOVEMENTS ARRAY', newWorkoutsMovementsArray)
+
+return db
+.insert(newWorkoutsMovementsArray)
+.into('workouts_movements')
+.returning('*')
+.where('workout_id', '=', id)
 },
 
 };

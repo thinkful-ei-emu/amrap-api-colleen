@@ -3,6 +3,7 @@ const { requireAuth } = require('../middleware/jwt-auth')
 const WorkoutsService = require('./workouts-service')
 const workoutsRouter = express.Router()
 const jsonBodyParser = express.json()
+const path = require('path')
 
 workoutsRouter
 .route('/')
@@ -26,7 +27,8 @@ WorkoutsService.getAllWorkouts(req.app.get('db'))
   WorkoutsService.search(req.app.get('db'), searchObj)
   .then(result =>{
     console.log(result);
-    return res.status(201).json(result)
+    return res.status(201)
+    .json(result)
   })
  
 })
@@ -50,8 +52,11 @@ workoutsRouter
 })
 .post(jsonBodyParser, (req, res)=>{
 const {workout_length, user_id, movements}=req.body
+let newWorkout = {workout_length, user_id, movements}
 let newWorkoutRow = { workout_length, user_id}
 let newWorkoutMovements = { movements }
+
+
 for(const[key, value] of Object.entries(newWorkout)){
   if (value == null){
     return res
@@ -59,10 +64,25 @@ for(const[key, value] of Object.entries(newWorkout)){
     .json({error: `Missing ${key} in request body`})
   }
 }
-WorkoutsService.insertNewWorkoutIntoWorkouts(req.app.get('db'), newWorkout)
-.then(newWorkout =>{
-  WorkoutsService.insertWorkoutMovementsIntoWorkoutsMovements(req.app.get('db'), newWorkoutMovements)
+WorkoutsService.insertNewWorkoutIntoWorkouts(req.app.get('db'), newWorkoutRow)
+.then(newRow=>{
+  console.log('NEW ROW', newRow.id)
+  WorkoutsService.insertNewWorkoutIntoWorkoutsMovements(req.app.get('db'), newRow.id, newWorkoutMovements)
+  .then( () =>{
+    WorkoutsService.getNewWorkout(req.app.get('db'), newRow.id)
+    .then(rawWkt=>{
+      let newWorkout = WorkoutsService.organizeWorkouts(rawWkt)
+      console.log(newWorkout)
+      return res
+      .status(201)
+      .location(path.posix.join(req.originalUrl + `/${newWorkout[0].workout_id}`))
+      .json(newWorkout)
+    })
+
+   
+  })
 })
+
 })
 
 module.exports = workoutsRouter
