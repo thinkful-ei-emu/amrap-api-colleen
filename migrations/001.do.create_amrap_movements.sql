@@ -1,3 +1,5 @@
+DROP TYPE IF EXISTS part CASCADE;
+
 CREATE TYPE part AS ENUM ('legs', 'shoulders', 'butt', 'arms', 'back', 'abs', 'full-body');
 
 CREATE TABLE movements (

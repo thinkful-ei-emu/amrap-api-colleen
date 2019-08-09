@@ -1,0 +1,174 @@
+   serializeWorkout(workout) {
+    /*  const {movement_1, movement_2, movement_3, movement_4, movement_5} = workout
+let movement1 = {movement_1}
+movement1 = db
+.from('movements')
+.select('movements.movement_name, movements.reps, movements.equipment')
+.where('workout.movement_1', 'movements.id')
+  let movementArray = []
+  let list = []
+  let movementNo = []
+  workouts.forEach(workout=>{
+      list.push(Object.entries(workout))
+      list.forEach(workoutarr=>{
+        workoutarr.filter(arr =>{
+          arr.includes('movement')
+        })
+
+      }) */
+    /* list.push(Object.keys(workout).filter( key=>
+        key.startsWith('movement')
+      )) */
+    /* })
+console.log(list)
+}, */
+  }
+};
+  /* 
+         if(!outputList[workout.workout_id -1]){
+      outputList.push(
+        {
+          workout_id: workout.workout_id,
+          workout_length: workout.workout_length,
+           movements: [
+            {
+              movement_name: workout.movement_name,
+              equipment: workout.equipment,
+              reps: workout.reps
+            }
+          ]
+        })}
+        else {
+          outputList[workout.workout_id].push(  movements: [
+            {
+              movement_name: workout.movement_name,
+              equipment: workout.equipment,
+              reps: workout.reps
+            }
+          ]) */
+        
+      
+      
+    
+    //console.log(listWorkouts[0][0])
+    //console.log(listWorkouts[0][1])
+  //  listWorkouts.forEach(workout =>{
+      //if(!outputList[workout.workout_id -1]){
+      /*   outputList.push(
+          {
+            workout_id: workout.workout_id,
+            workout_length: workout.workout_length,
+            movements: [
+              {
+                movement_name: workout.movement_name,
+                equipment: workout.equipment,
+                reps: workout.reps
+              }
+            ]
+          }) */
+  /*     } else {
+        outputList[workout.workout_id][movements].push({
+          movement_name: workout.movement_name,
+          equipment: workout.equipment,
+          reps: workout.reps
+        })
+      } */
+   // })
+    //console.log('output list:', JSON.stringify(outputList))
+    let movements = []
+    let userWorkouts = []
+    listWorkouts.map(array => {
+      let returnedWorkout = {};
+      array.find(obj => {
+        returnedWorkout.length = obj.workout_length;
+        userWorkouts.push(returnedWorkout)
+        return userWorkouts;
+      });
+      array.find(obj => {
+        workout_id = obj.workout_id;
+        returnedWorkout.workout_id = obj.workout_id;
+        userWorkouts.push(returnedWorkout)
+        return userWorkouts;
+      });
+      
+      array.forEach(obj=>{
+        
+        let entries = Object.entries(obj)
+        
+        for(i=0; i < entries.length; i++){
+        }
+        
+      })
+        }
+      )
+    //  console.log(userWorkouts)
+      //console.log(listWorkouts)
+    let uniqueList = Array.from(new Set(userWorkouts))
+    return uniqueList 
+    /*  for (workout in list){
+   usersWorkouts.push(list[workout])
+ }
+ usersWorkouts.map(obj =>{
+   organizedWorkout = []
+   for(workout_id in obj){
+     if (workout.includes('workout_id')){
+       organizedWorkout
+       //console.log(organizedWorkout)
+     } else organizedWorkout.push(obj[workout_id])
+     console.log(organizedWorkout)
+   } 
+   let thing = organizedWorkout.find(mvt => mvt.workout_length)
+   thing.workout_length */
+    // console.log(organizedWorkout)
+    //})
+
+
+/*   [
+  {workout_id: 1,
+  workout_length: 20,
+  movements:[
+    {id: 1, name:'burpees', reps:'10'},
+    { id: 2, name:'run', reps: '1 mile'},
+    {id: 3, name:'overhead squats', reps: '15'}
+  ]
+  },
+
+
+
+]  */
+  //workouts join workout_movements on (workout_id = workouts.id) join movements on (movement_id = movements.id)
+
+ function arrayMovementParse(thing){
+ let mvtArray = []
+mvtArray.push(thing)
+ /*  let movements = []
+for (let i = 0; i < array.length; i++){
+  //console.log(array)
+  movements.push(array[i].movement_name)
+  movements.push(array[i].equipment)
+  movements.push(array[i].reps)
+}
+console.log(movements)
+return movements  */
+}
+
+function arrayIdLengthParse(array){
+  let workoutDef = []
+  for(let i=0; i < array.length; i++){
+    workoutDef.push(array[i].movement_id)
+    workoutDef.push(array[i].workout_length)
+  }
+  return workoutDef
+}
+
+  /*   getMovementsByUserId(db, user_id) {
+    return db("workouts")
+      .join("workouts_movements", "workout_id", "workouts.id")
+      .join("movements", "movement_id", "movements.id")
+      .select(
+        "movement_name",
+        "equipment",
+        "reps",
+      )
+      .where({ user_id });
+  }, */

@@ -24,6 +24,12 @@ const MovementService = {
     .from('movements')
     .where('id', movementId)
     .first()
+  },
+  deleteMovement(db, movementId){
+    return db
+    .from('movements')
+    .where('id', movementId)
+    .delete()
   }
 }
 

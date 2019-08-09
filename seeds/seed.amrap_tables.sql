@@ -38,12 +38,26 @@ VALUES
 ('dunder-mifflin', 'sahmad.dh2014w@shn.luk2.com', '$2y$12$CjzPdx5N0jPjaXRjxlq7b.tRYUr1tbqbApo4O9hnPxM8acjuLuPXi
 ');
 
-INSERT INTO workouts (user_id, workout_length, movement_1, movement_2, movement_3, movement_4, movement_5)
+INSERT INTO workouts (user_id, workout_length)
 VALUES
-(1, 10, 3, 8, 9, 4, 2),
-(1, 20, 15, 19, 3, 1, 5),
-(2, 45, 1, 18, 20, 6, 10),
-(3, 13, 13, 16, 5, 11, 12);
+(1, 10),
+(1, 20),
+(2, 45),
+(3, 13);
 
+INSERT INTO workouts_movements (workout_id, movement_id)
+VALUES
+(1, 3),
+(1, 1),
+(1, 16),
+(1, 5),
+(2, 6),
+(2, 5),
+(2, 14),
+(3, 2),
+(3, 11),
+(3, 12),
+(4, 18),
+(4, 7);
 
 COMMIT;

@@ -55,4 +55,10 @@ movementRouter
     reps: res.movement.reps
   })
 })
+.delete((req, res)=>{
+  MovementService.deleteMovement(req.app.get('db'), req.params.movementId)
+  .then(()=> {
+    return res.status(204).end()
+  })
+})
 module.exports = movementRouter
