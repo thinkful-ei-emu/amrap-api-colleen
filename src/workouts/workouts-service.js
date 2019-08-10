@@ -6,7 +6,6 @@ const WorkoutsService = {
   search(db, searchObj) {
     let equipment = (searchObj.equipment).replace(" ", "|");
     let num_exercises = Math.floor(Math.random() * (5 - 3 + 1) + 3);
-    console.log("NUMBER IS: " + num_exercises);
     return db('movements')
     .select('*')
     .where(db.raw(`equipment SIMILAR TO '${equipment}'`))

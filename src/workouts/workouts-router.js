@@ -35,7 +35,7 @@ WorkoutsService.getAllWorkouts(req.app.get('db'))
 
 workoutsRouter
 .route('/:userId')
-.all((req, res, next)=> {
+.all(requireAuth, (req, res, next)=> {
   WorkoutsService.getWorkoutByUserId(req.app.get('db'), req.params.userId)
   .then(workouts =>{
     if(!workouts){
