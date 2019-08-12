@@ -26,6 +26,7 @@ const usersService = {
     .first()
     .then(user => !!user)
   },
+  
   serializeUser(user){
     return {
       id: user.id,
