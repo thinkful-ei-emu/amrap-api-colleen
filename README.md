@@ -1,17 +1,35 @@
-# Express Boilerplate!
+# AMRAP API
 
-This is a boilerplate project used for starting new projects!
+This is an express server and seed data for the AMRApp
 
 ## Set up
+1. Install dependencies: `npm install`
+2. Create development and test databases: `createdb amrap`, `createdb amrap-test`
+3. Create database user : ex/ `createuser amrap`
+4. Grant privileges to user for DB
+5. Prep .env `cp example.env .env`
+6. Replace values with custom values if needed
+7. Bootstrap dev database: `MIGRATION_DB_NAME=amrap npm run migrate`
+8. Bootstrap test database: `MIGRATION_DB_NAME=amrap-test npm run migrate`
 
-Complete the following steps to start a new project (NEW-PROJECT-NAME):
+### Configuring Postgres
+For tests involving time to run properly, your Postgres database must be configured to run in the UTC timezone.
 
-1. Clone this repository to your local machine `git clone BOILERPLATE-URL NEW-PROJECTS-NAME`
-2. `cd` into the cloned repository
-3. Make a fresh start of the git history for this project with `rm -rf .git && git init`
-4. Install the node dependencies `npm install`
-5. Move the example Environment file to `.env` that will be ignored by git and read by the express server `mv example.env .env`
-6. Edit the contents of the `package.json` to use NEW-PROJECT-NAME instead of `"name": "express-boilerplate",`
+1. Locate the `postgresql.conf` file for your Postgres installation.
+    - OS X, Homebrew: `/usr/local/var/postgres/postgresql.conf`
+2. Uncomment the `timezone` line and set it to `UTC` as follows:
+
+```
+# - Locale and Formatting -
+
+datestyle = 'iso, mdy'
+#intervalstyle = 'postgres'
+timezone = 'UTC'
+#timezone_abbreviations = 'Default'     # Select the set of available time zone
+```
+## Sample Data
+
+- To seed the database for development (will truncate automatically before seeding): `psql -U amrap -d amrap -a -f seeds/seed.amrap_tables.sql`
 
 ## Scripts
 
@@ -21,6 +39,3 @@ Start nodemon for the application `npm run dev`
 
 Run the tests `npm test`
 
-## Deploying
-
-When your new project is ready for deployment, add a new Heroku application with `heroku create`. This will make a new git remote called "heroku" and you can then `npm run deploy` which will push to this remote's master branch.
