@@ -18,10 +18,10 @@ const morganOption = (NODE_ENV === 'production'
  app.use(helmet())
  app.use(cors())
  
- app.use('api/workouts', workoutsRouter)
- app.use('api/users', usersRouter)
- app.use('api/auth', authRouter)
- app.use('api/movements', movementRouter)
+ app.use('/api/workouts', workoutsRouter)
+ app.use('/api/users', usersRouter)
+ app.use('/api/auth', authRouter)
+ app.use('/api/movements', movementRouter)
  app.use(function errorHandler(error, req, res, next){
    let response
    if (NODE_ENV === 'production') {
