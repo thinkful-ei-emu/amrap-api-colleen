@@ -4,7 +4,7 @@ const helpers = require('./test-helpers')
 const jwt = require('jsonwebtoken')
 
 
-describe.only('Auth Endpoints', function(){
+describe('Auth Endpoints', function(){
   let db
 
   const {testUsers} = helpers.makeFixtures()
@@ -59,6 +59,8 @@ it('responds 200 and JWT auth token using secret when valid credentials', ()=>{
    user_name: testUser.user_name,
    password: testUser.password,
  }
+ const expectedId = {user_id: testUser.id}
+
  const expectedToken = jwt.sign(
    {user_id: testUser.id}, //payload
    process.env.JWT_SECRET,
@@ -71,13 +73,15 @@ it('responds 200 and JWT auth token using secret when valid credentials', ()=>{
  .send(userValidCreds)
  .expect(200, {
    authToken: expectedToken,
+   payload: expectedId
  })
 })
 });
 describe('POST /api/auth/refresh', ()=>{
 beforeEach('insert users', ()=> helpers.seedUsers(db, testUsers))
 it('responds 200 and JWT auth token using secret', ()=> {
-  console.log(process.env.JWT_SECRET)
+  const expectedId = {user_id: testUser.id}
+
  const expectedToken = jwt.sign(
    {user_id: testUser.id}, process.env.JWT_SECRET,
    {subject: testUser.user_name,
@@ -87,7 +91,7 @@ it('responds 200 and JWT auth token using secret', ()=> {
  return supertest(app)
  .post('/api/auth/refresh')
  .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
- .expect(200, {authToken: expectedToken})
+ .expect(200, {authToken: expectedToken, payload: expectedId})
 })
 })
 });

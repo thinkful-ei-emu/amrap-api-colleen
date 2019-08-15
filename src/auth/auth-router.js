@@ -21,7 +21,6 @@ authRouter
         loginUser.user_name
         )
     .then(dbUser => {
-      console.log(dbUser)
       if (!dbUser)
         return res
           .status(400)

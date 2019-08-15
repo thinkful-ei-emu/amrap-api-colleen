@@ -25,13 +25,7 @@ function requireAuth(req, res, next) {
       req.user = user
      next()
     })
-    /* .then(user => {
-      console.log(user)
-      if (user.id !== req.params.userId)
-        return res.status(401).json({error: 'Unauthorized request'})
-      req.user = user
-     next()
-    }) */
+   
     .catch(err =>{
       console.error(err)
       next(err)

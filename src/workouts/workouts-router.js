@@ -26,7 +26,6 @@ WorkoutsService.getAllWorkouts(req.app.get('db'))
   }
   WorkoutsService.search(req.app.get('db'), searchObj)
   .then(result =>{
-    console.log(result);
     return res.status(201)
     .json(result)
   })
@@ -66,13 +65,11 @@ for(const[key, value] of Object.entries(newWorkout)){
 }
 WorkoutsService.insertNewWorkoutIntoWorkouts(req.app.get('db'), newWorkoutRow)
 .then(newRow=>{
-  console.log('NEW ROW', newRow.id)
   WorkoutsService.insertNewWorkoutIntoWorkoutsMovements(req.app.get('db'), newRow.id, newWorkoutMovements)
   .then( () =>{
     WorkoutsService.getNewWorkout(req.app.get('db'), newRow.id)
     .then(rawWkt=>{
       let newWorkout = WorkoutsService.organizeWorkouts(rawWkt)
-      console.log(newWorkout)
       return res
       .status(201)
       .location(path.posix.join(req.originalUrl + `/${newWorkout[0].workout_id}`))

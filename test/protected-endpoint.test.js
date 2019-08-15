@@ -8,7 +8,8 @@ describe("Protected endpoints", function() {
   const {
     testUsers,
     testMovements,
-    testWorkouts
+    testWorkouts,
+    testWorkoutsMovements
   } = helpers.makeFixtures();
 
   before("make knex instance", () => {
@@ -26,13 +27,18 @@ describe("Protected endpoints", function() {
   afterEach("cleanup", () => helpers.cleanTables(db));
 
   beforeEach("insert ", () =>
-    helpers.seedAmrapTables(db, testUsers, testMovements, testWorkouts)
+    helpers.seedAmrapTables(db, testUsers, testMovements, testWorkouts, testWorkoutsMovements)
   );
 
   const protectedEndpoints = [
     {
       name: "GET /api/workouts/:userId",
       path: "/api/workouts/1",
+      method: supertest(app).get
+    },
+    {
+      name: 'POST /api/workouts/:userId',
+      path: '/api/workouts/1',
       method: supertest(app).get
     },
     {

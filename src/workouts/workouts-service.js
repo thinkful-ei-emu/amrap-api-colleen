@@ -88,12 +88,10 @@ insertNewWorkoutIntoWorkoutsMovements(db, id, newWorkoutMovements){
   //newWorkoutMovements: array of objects
   //desired for each newWorkoutMovement: [{ workout_id: , movement_id: }]
   let workoutId = id
-  console.log('INPUT OF MOVEMENTS', newWorkoutMovements.movements)
 
 let newWorkoutsMovementsArray = newWorkoutMovements.movements.map(mvt =>{
 return { workout_id: workoutId, movement_id: mvt.id} 
 })
-console.log('NEW WORKOUTS MOVEMENTS ARRAY', newWorkoutsMovementsArray)
 
 return db
 .insert(newWorkoutsMovementsArray)

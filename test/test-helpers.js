@@ -58,7 +58,7 @@ function makeMovementsArray(){
     {
       id: 5,
       movement_name:'plank',
-      body_part:'f',
+      body_part:'full-body',
       reps: '20 seconds',
       equipment: '', 
     }
@@ -71,25 +71,37 @@ function makeWorkoutsArray(users) {
       id: 1,
       user_id: users[0].id,
       workout_length: 30,
+      date_created: new Date()
      
     },
     {
       id: 2,
       user_id: users[1].id,
       workout_length: 20,
-     
+      date_created: new Date()
     },
     {
       id: 3,
       user_id: users[2].id,
       workout_length: 50,
-     
+      date_created: new Date()
     }
   ]
 }
 function makeWorkoutsMovementsArray(workout, movement){
   return [
-    
+    {workout_id:workout[0].id, movement_id:movement[0].id},
+    {workout_id:workout[0].id, movement_id:movement[1].id},
+    {
+    workout_id:workout[0].id, movement_id:movement[2].id
+    },
+    {workout_id:workout[1].id, movement_id:movement[3].id},
+    {workout_id:workout[1].id, movement_id:movement[4].id},
+    {workout_id:workout[1].id, movement_id:movement[0].id},
+    {workout_id:workout[2].id, movement_id:movement[0].id},
+    {workout_id:workout[2].id, movement_id:movement[1].id},
+    {workout_id:workout[2].id, movement_id:movement[2].id},
+
   ]
 
 }
@@ -97,7 +109,8 @@ function makeFixtures(){
   const testUsers = makeUsersArray()
   const testMovements = makeMovementsArray()
   const testWorkouts = makeWorkoutsArray(testUsers, testMovements)
-  return { testUsers, testMovements, testWorkouts}
+  const testWorkoutsMovements = makeWorkoutsMovementsArray(testWorkouts, testMovements)
+  return { testUsers, testMovements, testWorkouts, testWorkoutsMovements}
 }
 function cleanTables(db){
   return db.transaction(trx=>
@@ -110,7 +123,6 @@ function cleanTables(db){
     )
     .then(()=> 
     Promise.all([
-      trx.raw('ALTER SEQUENCE workouts_movements_id_seq minvalue 0 START WITH 1'),
       trx.raw('ALTER SEQUENCE workouts_id_seq minvalue 0 START WITH 1'),
       trx.raw(`ALTER SEQUENCE amrap_users_id_seq minvalue 0 START WITH 1`),
       trx.raw(`ALTER SEQUENCE movements_id_seq minvalue 0 START WITH 1`),
@@ -133,7 +145,7 @@ function seedUsers(db, users){
     [users[users.length-1].id],
   ))
 }
-function seedAmrapTables(db, users, movements, workouts=[]){
+function seedAmrapTables(db, users, movements, workouts=[], workouts_movements=[]){
   return db.transaction(async trx => {
     await seedUsers(trx, users)
     await trx.into('movements').insert(movements)
@@ -146,6 +158,8 @@ function seedAmrapTables(db, users, movements, workouts=[]){
         `SELECT setval('workouts_id_seq', ?)`,
         [workouts[workouts.length-1].id]
       )
+      await trx.into('workouts_movements').insert(workouts_movements)
+      
     }
   })
 }
