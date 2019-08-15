@@ -65,41 +65,34 @@ function makeMovementsArray(){
   ]
 }
 
-function makeWorkoutsArray(users, movements) {
+function makeWorkoutsArray(users) {
   return [
     {
       id: 1,
       user_id: users[0].id,
-      time: 30,
-      movement_1: movements[0].id,
-      movement_2: movements[1].id,
-      movement_3: movements[2].id,
-      movement_4: movements[3].id,
-      movement_5: movements[4].id
+      workout_length: 30,
+     
     },
     {
       id: 2,
       user_id: users[1].id,
-      time: 20,
-      movement_1: movements[1].id,
-      movement_2: movements[3].id,
-      movement_3: movements[4].id,
-      movement_4: movements[2].id,
-      movement_5: movements[0].id
+      workout_length: 20,
+     
     },
     {
       id: 3,
       user_id: users[2].id,
-      time: 50,
-      movement_1: movements[0].id,
-      movement_2: movements[2].id,
-      movement_3: movements[1].id,
-      movement_4: movements[4].id,
-      movement_5: movements[3].id
+      workout_length: 50,
+     
     }
   ]
 }
+function makeWorkoutsMovementsArray(workout, movement){
+  return [
+    
+  ]
 
+}
 function makeFixtures(){
   const testUsers = makeUsersArray()
   const testMovements = makeMovementsArray()
@@ -110,12 +103,14 @@ function cleanTables(db){
   return db.transaction(trx=>
     trx.raw(
       `TRUNCATE
+      workouts_movements,
       workouts,
       amrap_users,
       movements`
     )
     .then(()=> 
     Promise.all([
+      trx.raw('ALTER SEQUENCE workouts_movements_id_seq minvalue 0 START WITH 1'),
       trx.raw('ALTER SEQUENCE workouts_id_seq minvalue 0 START WITH 1'),
       trx.raw(`ALTER SEQUENCE amrap_users_id_seq minvalue 0 START WITH 1`),
       trx.raw(`ALTER SEQUENCE movements_id_seq minvalue 0 START WITH 1`),
