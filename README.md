@@ -9,6 +9,7 @@ This is an express server and seed data for the AMRApp application
 3. Create database user : ex/ `createuser amrap`
 4. Grant privileges to user for DB
 5. Prep .env `cp example.env .env`
+--/src/config.js contains port and DB url locations, update as needed
 6. Replace values with custom values if needed
 7. Bootstrap dev database: `MIGRATION_DB_NAME=amrap npm run migrate`
 8. Bootstrap test database: `MIGRATION_DB_NAME=amrap-test npm run migrate`
@@ -41,6 +42,16 @@ Start the application `npm start`
 Start nodemon for the application `npm run dev`
 
 Run the tests `npm test`
+
+##Deploy
+
+Run `heroku push master`
+
+Update proper migration endpoints in postgrator-production and .env
+
+Run `npm run deploy`
+
+Ensure heroku database is seeded (can use seeds/seed.amrap_tables.sql)
 
 ## Api Endpoints
 
