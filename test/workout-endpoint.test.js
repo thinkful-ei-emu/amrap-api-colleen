@@ -36,13 +36,6 @@ describe.only("Workouts endpoints", function() {
     )
   );
 
-  /*  describe('GET /api/workouts', ()=>{
-    it('returns all workouts with status 200', ()=>{
-      return supertest(app)
-      .get('/api/workouts')
-      .expect(200, testWorkouts)
-    })
-  }) */
   describe("POST /api/workouts", () => {
     it("returns 400 if no search equipment or time given", () => {
       return supertest(app)
@@ -62,7 +55,7 @@ describe.only("Workouts endpoints", function() {
   });
   describe("POST /api/workouts/:userId", () => {
     it("returns 201 when auth user saves workout", () => {
-      const secret = process.env.JWT_SECRET
+      const secret = process.env.JWT_SECRET;
       workoutToSave = {
         workout_length: 15,
         user_id: testUsers[0].id,
@@ -88,15 +81,16 @@ describe.only("Workouts endpoints", function() {
         ]
       };
       return supertest(app)
-      .post(`/api/workouts/${testUsers[0].id}`)
-      .set("Authorization", helpers.makeAuthHeader(testUsers[0],secret))
-      .send(workoutToSave)
-      .expect(201)
-      .expect(res =>{
-        expect(res.body).to.be.an('array')
-        expect(res.headers.location).to.eql(`/api/workouts/${testUsers[0].id}/${res.body[0].workout_id}`)
-
-      })
+        .post(`/api/workouts/${testUsers[0].id}`)
+        .set("Authorization", helpers.makeAuthHeader(testUsers[0], secret))
+        .send(workoutToSave)
+        .expect(201)
+        .expect(res => {
+          expect(res.body).to.be.an("array");
+          expect(res.headers.location).to.eql(
+            `/api/workouts/${testUsers[0].id}/${res.body[0].workout_id}`
+          );
+        });
     });
   });
 });

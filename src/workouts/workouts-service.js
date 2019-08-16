@@ -4,14 +4,14 @@ const WorkoutsService = {
   },
 
   search(db, searchObj) {
-    let equipment = (searchObj.equipment).replace(" ", "|");
+    let equipment = searchObj.equipment.replace(" ", "|");
     let num_exercises = Math.floor(Math.random() * (5 - 3 + 1) + 3);
-    return db('movements')
-    .select('*')
-    .where(db.raw(`equipment SIMILAR TO '${equipment}'`))
-    .orWhereNull('equipment')
-    .orderByRaw('RANDOM()')
-    .limit(num_exercises);
+    return db("movements")
+      .select("*")
+      .where(db.raw(`equipment SIMILAR TO '${equipment}'`))
+      .orWhereNull("equipment")
+      .orderByRaw("RANDOM()")
+      .limit(num_exercises);
   },
   getWorkoutByUserId(db, user_id) {
     return db("workouts")
@@ -28,20 +28,20 @@ const WorkoutsService = {
       )
       .where({ user_id });
   },
-  getNewWorkout(db, workout_id){
+  getNewWorkout(db, workout_id) {
     return db("workouts")
-    .join("workouts_movements", "workout_id", "workouts.id")
-    .join("movements", "movement_id", "movements.id")
-    .select(
-      "date_created",
-      "workout_length",
-      "workout_id",
-      "movement_name",
-      "movement_id",
-      "equipment",
-      "reps"
-    )
-    .where({ workout_id });
+      .join("workouts_movements", "workout_id", "workouts.id")
+      .join("movements", "movement_id", "movements.id")
+      .select(
+        "date_created",
+        "workout_length",
+        "workout_id",
+        "movement_name",
+        "movement_id",
+        "equipment",
+        "reps"
+      )
+      .where({ workout_id });
   },
   organizeWorkouts(workouts) {
     let list = workouts.reduce(function(r, a) {
@@ -62,7 +62,17 @@ const WorkoutsService = {
     }
     let result = Object.values(
       mvtArray.reduce(
-        (c, { workout_id, movement_id, movement_name, reps, equipment, workout_length }) => {
+        (
+          c,
+          {
+            workout_id,
+            movement_id,
+            movement_name,
+            reps,
+            equipment,
+            workout_length
+          }
+        ) => {
           c[workout_id] = c[workout_id] || { workout_id, movements: [] };
           c[workout_id].workout_length = workout_length;
           c[workout_id].movements = c[workout_id].movements.concat(
@@ -75,31 +85,28 @@ const WorkoutsService = {
         {}
       )
     );
-    return result
+    return result;
   },
-insertNewWorkoutIntoWorkouts(db, newWorkout){
-  return db
-  .insert(newWorkout)
-  .into('workouts')
-  .returning('*')
-  .then(rows=>rows[0])
-},
-insertNewWorkoutIntoWorkoutsMovements(db, id, newWorkoutMovements){
-  //newWorkoutMovements: array of objects
-  //desired for each newWorkoutMovement: [{ workout_id: , movement_id: }]
-  let workoutId = id
+  insertNewWorkoutIntoWorkouts(db, newWorkout) {
+    return db
+      .insert(newWorkout)
+      .into("workouts")
+      .returning("*")
+      .then(rows => rows[0]);
+  },
+  insertNewWorkoutIntoWorkoutsMovements(db, id, newWorkoutMovements) {
+    let workoutId = id;
 
-let newWorkoutsMovementsArray = newWorkoutMovements.movements.map(mvt =>{
-return { workout_id: workoutId, movement_id: mvt.id} 
-})
+    let newWorkoutsMovementsArray = newWorkoutMovements.movements.map(mvt => {
+      return { workout_id: workoutId, movement_id: mvt.id };
+    });
 
-return db
-.insert(newWorkoutsMovementsArray)
-.into('workouts_movements')
-.returning('*')
-.where('workout_id', '=', id)
-},
-
+    return db
+      .insert(newWorkoutsMovementsArray)
+      .into("workouts_movements")
+      .returning("*")
+      .where("workout_id", "=", id);
+  }
 };
 
 module.exports = WorkoutsService;

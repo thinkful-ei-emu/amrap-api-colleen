@@ -1,36 +1,33 @@
-
 const MovementService = {
-  getAllMovements(db){
-    return db
-    .select('*')
-    .from('movements')
+  getAllMovements(db) {
+    return db.select("*").from("movements");
   },
-  hasMovementWithMovementName(db, movement_name){
-    return db('movements')
-    .where({movement_name})
-    .first()
-    .then(movement=> !!movement)
+  hasMovementWithMovementName(db, movement_name) {
+    return db("movements")
+      .where({ movement_name })
+      .first()
+      .then(movement => !!movement);
   },
-  insertMovement(db, newMovement){
+  insertMovement(db, newMovement) {
     return db
-    .insert(newMovement)
-    .into('movements')
-    .returning('*')
-    .then(([movement]) => movement)
+      .insert(newMovement)
+      .into("movements")
+      .returning("*")
+      .then(([movement]) => movement);
   },
-  getMovementById(db, movementId){
+  getMovementById(db, movementId) {
     return db
-    .select('*')
-    .from('movements')
-    .where('id', movementId)
-    .first()
+      .select("*")
+      .from("movements")
+      .where("id", movementId)
+      .first();
   },
-  deleteMovement(db, movementId){
+  deleteMovement(db, movementId) {
     return db
-    .from('movements')
-    .where('id', movementId)
-    .delete()
+      .from("movements")
+      .where("id", movementId)
+      .delete();
   }
-}
+};
 
-module.exports = MovementService
+module.exports = MovementService;

@@ -27,7 +27,13 @@ describe("Protected endpoints", function() {
   afterEach("cleanup", () => helpers.cleanTables(db));
 
   beforeEach("insert ", () =>
-    helpers.seedAmrapTables(db, testUsers, testMovements, testWorkouts, testWorkoutsMovements)
+    helpers.seedAmrapTables(
+      db,
+      testUsers,
+      testMovements,
+      testWorkouts,
+      testWorkoutsMovements
+    )
   );
 
   const protectedEndpoints = [
@@ -37,14 +43,14 @@ describe("Protected endpoints", function() {
       method: supertest(app).get
     },
     {
-      name: 'POST /api/workouts/:userId',
-      path: '/api/workouts/1',
+      name: "POST /api/workouts/:userId",
+      path: "/api/workouts/1",
       method: supertest(app).get
     },
     {
       name: "POST /api/auth/refresh",
-      path: '/api/auth/refresh',
-      method: supertest(app).post,
+      path: "/api/auth/refresh",
+      method: supertest(app).post
     }
   ];
 

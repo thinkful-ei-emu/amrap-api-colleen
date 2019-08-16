@@ -1,97 +1,100 @@
-const knex = require('knex')
-const app = require('../src/app')
-const helpers = require('./test-helpers')
-const jwt = require('jsonwebtoken')
+const knex = require("knex");
+const app = require("../src/app");
+const helpers = require("./test-helpers");
+const jwt = require("jsonwebtoken");
 
+describe("Auth Endpoints", function() {
+  let db;
 
-describe('Auth Endpoints', function(){
-  let db
+  const { testUsers } = helpers.makeFixtures();
+  const testUser = testUsers[0];
 
-  const {testUsers} = helpers.makeFixtures()
-  const testUser = testUsers[0]
-
-  before('make knex instance', ()=>{
+  before("make knex instance", () => {
     db = knex({
-      client: 'pg',
+      client: "pg",
       connection: process.env.TEST_DB_URL
-    })
-    app.set('db', db)
-  })
-  after('disconnect from db', ()=>db.destroy())
-  before('cleanup', ()=> helpers.cleanTables(db))
-  afterEach('cleanup', ()=>helpers.cleanTables(db))
+    });
+    app.set("db", db);
+  });
+  after("disconnect from db", () => db.destroy());
+  before("cleanup", () => helpers.cleanTables(db));
+  afterEach("cleanup", () => helpers.cleanTables(db));
 
-  describe('POST /api/auth/login', ()=>{
-    beforeEach('insert users', ()=>helpers.seedUsers(db, testUsers))
-    const requiredFields = ['user_name', 'password']
+  describe("POST /api/auth/login", () => {
+    beforeEach("insert users", () => helpers.seedUsers(db, testUsers));
+    const requiredFields = ["user_name", "password"];
 
-    requiredFields.forEach(field=>{
+    requiredFields.forEach(field => {
       const loginAttemptBody = {
         user_name: testUser.user_name,
         password: testUser.password
-      }
-      it('responds with 400 when username or password is missing',()=>{
-        delete loginAttemptBody[field]
+      };
+      it("responds with 400 when username or password is missing", () => {
+        delete loginAttemptBody[field];
         return supertest(app)
-        .post('/api/auth/login')
-        .send(loginAttemptBody)
-        .expect(400, {error: `Missing ${field} in request body`})
-
-      })
-    })
+          .post("/api/auth/login")
+          .send(loginAttemptBody)
+          .expect(400, { error: `Missing ${field} in request body` });
+      });
+    });
     it(`responds 400 'invalid user_name or password' when bad user_name`, () => {
-      const userInvalidUser = { user_name: 'user-not', password: 'existy' }
+      const userInvalidUser = { user_name: "user-not", password: "existy" };
       return supertest(app)
-        .post('/api/auth/login')
+        .post("/api/auth/login")
         .send(userInvalidUser)
-        .expect(400, { error: `Incorrect username or password` })
-    })
-it('responds 400 invalid user_name or password when bad password',()=>{
- const userInvalidPass = { user_name: testUser, password: 'bad'}
- return supertest(app)
- .post('/api/auth/login')
- .send(userInvalidPass)
- .expect(400, {error: `Incorrect username or password`})
-})
+        .expect(400, { error: `Incorrect username or password` });
+    });
+    it("responds 400 invalid user_name or password when bad password", () => {
+      const userInvalidPass = { user_name: testUser, password: "bad" };
+      return supertest(app)
+        .post("/api/auth/login")
+        .send(userInvalidPass)
+        .expect(400, { error: `Incorrect username or password` });
+    });
 
-it('responds 200 and JWT auth token using secret when valid credentials', ()=>{
- const userValidCreds = {
-   user_name: testUser.user_name,
-   password: testUser.password,
- }
- const expectedId = {user_id: testUser.id}
+    it("responds 200 and JWT auth token using secret when valid credentials", () => {
+      const userValidCreds = {
+        user_name: testUser.user_name,
+        password: testUser.password
+      };
+      const expectedId = { user_id: testUser.id };
 
- const expectedToken = jwt.sign(
-   {user_id: testUser.id}, //payload
-   process.env.JWT_SECRET,
-   { subject: testUser.user_name,
-     expiresIn: process.env.JWT_EXPIRY,
-   algorithm: 'HS256'}
- )
- return supertest(app)
- .post('/api/auth/login')
- .send(userValidCreds)
- .expect(200, {
-   authToken: expectedToken,
-   payload: expectedId
- })
-})
-});
-describe('POST /api/auth/refresh', ()=>{
-beforeEach('insert users', ()=> helpers.seedUsers(db, testUsers))
-it('responds 200 and JWT auth token using secret', ()=> {
-  const expectedId = {user_id: testUser.id}
+      const expectedToken = jwt.sign(
+        { user_id: testUser.id }, //payload
+        process.env.JWT_SECRET,
+        {
+          subject: testUser.user_name,
+          expiresIn: process.env.JWT_EXPIRY,
+          algorithm: "HS256"
+        }
+      );
+      return supertest(app)
+        .post("/api/auth/login")
+        .send(userValidCreds)
+        .expect(200, {
+          authToken: expectedToken,
+          payload: expectedId
+        });
+    });
+  });
+  describe("POST /api/auth/refresh", () => {
+    beforeEach("insert users", () => helpers.seedUsers(db, testUsers));
+    it("responds 200 and JWT auth token using secret", () => {
+      const expectedId = { user_id: testUser.id };
 
- const expectedToken = jwt.sign(
-   {user_id: testUser.id}, process.env.JWT_SECRET,
-   {subject: testUser.user_name,
-   expiresIn: process.env.JWT_EXPIRY,
- algorithm: 'HS256'}
- )
- return supertest(app)
- .post('/api/auth/refresh')
- .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
- .expect(200, {authToken: expectedToken, payload: expectedId})
-})
-})
+      const expectedToken = jwt.sign(
+        { user_id: testUser.id },
+        process.env.JWT_SECRET,
+        {
+          subject: testUser.user_name,
+          expiresIn: process.env.JWT_EXPIRY,
+          algorithm: "HS256"
+        }
+      );
+      return supertest(app)
+        .post("/api/auth/refresh")
+        .set("Authorization", helpers.makeAuthHeader(testUsers[0]))
+        .expect(200, { authToken: expectedToken, payload: expectedId });
+    });
+  });
 });
