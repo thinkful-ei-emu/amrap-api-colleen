@@ -47,6 +47,12 @@ workoutsRouter
     let workouts = WorkoutsService.organizeWorkouts(res.workouts);
     return res.json(workouts);
   })
+  .delete(jsonBodyParser, (req, res)=>{
+    const {workout_id}= req.body;
+    let workoutToBeDeleted = {workout_id}
+    WorkoutsService.deleteWorkout(req.app.get('db'), workoutToBeDeleted)
+    .then(()=> res.status(204).end())
+  })
   .post(jsonBodyParser, (req, res) => {
     const { workout_length, user_id, movements } = req.body;
     let newWorkout = { workout_length, user_id, movements };

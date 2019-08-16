@@ -106,12 +106,19 @@ const WorkoutsService = {
       .into("workouts_movements")
       .returning("*")
       .where("workout_id", "=", id);
+  },
+  deleteWorkout(db, workoutId){
+    let id = workoutId.workout_id
+    console.log(id)
+    return db('workouts_movements')
+    .where('workout_id', '=', id)
+    .delete()
   }
 };
 
 module.exports = WorkoutsService;
 
-/*
+/* process for adding workouts in Raw SQL:
 1.
    INSERT INTO workouts 
 amrap-> (user_id, workout_length) //from req.body=> array of two objects
