@@ -93,4 +93,16 @@ describe.only("Workouts endpoints", function() {
         });
     });
   });
+  describe('DELETE /api/workouts/:userId', ()=>{
+    it('returns 204 and deletes selected workout', ()=>{
+      const secret = process.env.JWT_SECRET;
+      const workoutToDelete = {workout_id: testWorkouts[0].id}
+      const user = testUsers[0].id
+      return supertest(app)
+      .delete(`/api/workouts/${user}`)
+      .set('Authorization', helpers.makeAuthHeader(testUsers[0], secret))
+      .send(workoutToDelete)
+      .expect(204)
+    })
+  })
 });

@@ -5,6 +5,7 @@ const WorkoutsService = {
 
   search(db, searchObj) {
     let equipment = searchObj.equipment.replace(" ", "|");
+    //returns random number to generate workouts by
     let num_exercises = Math.floor(Math.random() * (5 - 3 + 1) + 3);
     return db("movements")
       .select("*")
@@ -44,17 +45,21 @@ const WorkoutsService = {
       .where({ workout_id });
   },
   organizeWorkouts(workouts) {
+    //takes objects from join table and reduces to array of objects by workout ID
     let list = workouts.reduce(function(r, a) {
       r[a.workout_id] = r[a.workout_id] || [];
       r[a.workout_id].push(a);
       return r;
     }, {});
+    //reorganizes array
     let listWorkouts = [];
     for (let key in list) {
       listWorkouts.push(list[key]);
     }
 
     let mvtArray = [];
+    //then takes only list of movements to new array and reduces to new object which
+    //filters out extra workout length and workout ID for consise display of workout
     for (let i = 0; i < listWorkouts.length; i++) {
       listWorkouts[i].forEach(workout => {
         mvtArray.push(workout);

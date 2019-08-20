@@ -1,5 +1,5 @@
 const express = require("express");
-const { requireAuth, requireAdminAuth } = require("../middleware/jwt-auth");
+const { requireAuth} = require("../middleware/jwt-auth");
 const WorkoutsService = require("./workouts-service");
 const workoutsRouter = express.Router();
 const jsonBodyParser = express.json();
@@ -48,6 +48,7 @@ workoutsRouter
     return res.json(workouts);
   })
   .delete(jsonBodyParser, (req, res)=>{
+    console.log(req.body)
     const {workout_id}= req.body;
     let workoutToBeDeleted = {workout_id}
     WorkoutsService.deleteWorkout(req.app.get('db'), workoutToBeDeleted)
