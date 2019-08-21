@@ -26,11 +26,11 @@ movementRouter
       if (movementExist)
         return res.status(400).json({ error: "Movement_name already exists" });
 
-      return MovementService.insertMovement(
+      MovementService.insertMovement(
         req.app.get("db"),
         newMovement
       ).then(movement => {
-        res
+        return res
           .status(201)
           .location(path.posix.join(req.originalUrl, `/${movement.id}`))
           .json(movement);

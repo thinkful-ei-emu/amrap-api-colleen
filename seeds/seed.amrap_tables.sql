@@ -3,7 +3,8 @@ BEGIN;
 TRUNCATE
 workouts,
 amrap_users,
-movements
+movements,
+workouts_movements
 RESTART IDENTITY CASCADE;
 
 INSERT INTO movements (movement_name, body_part, equipment, reps)
@@ -19,7 +20,7 @@ VALUES
 ('renegade rows', 'back', 'dumbell', '5 each arm'),
 ('kettlebell swings', 'butt', 'kettlebell', '15'),
 ('run', 'full-body', 'treadmill', '200 meters'),
-('bike', 'legs', 'stationary bike', '800 meters'),
+('bike', 'legs', 'stationary-bike', '800 meters'),
 ('fire hydrants', 'butt', null, '15 each side'),
 ('single leg bridges', 'butt', null, '10 each side'),
 ('side-lying straight leg raise', 'butt', null, '10 each side'),
@@ -27,7 +28,11 @@ VALUES
 ('overhead press', 'arms', 'barbell', '5'),
 ('back squat', 'legs', 'barbell', '10'),
 ('power clean', 'full-body', 'barbell', '5'),
-('bent-over single arm row', 'back', 'dumbell', '8 each side');
+('bent-over single arm row', 'back', 'dumbell', '8 each side'),
+('bike', 'legs', 'stationary-bike', '1 mile'),
+('bike', 'legs', 'stationary-bike', '400 meters'),
+('run', 'full-body', 'treadmill', '100 meters'),
+('banded side steps', 'legs', 'bands', '20 steps each leg');
 
 INSERT INTO amrap_users (user_name, email, password)
 VALUES

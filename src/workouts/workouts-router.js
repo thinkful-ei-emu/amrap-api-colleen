@@ -1,5 +1,5 @@
 const express = require("express");
-const { requireAuth} = require("../middleware/jwt-auth");
+const { requireAuth } = require("../middleware/jwt-auth");
 const WorkoutsService = require("./workouts-service");
 const workoutsRouter = express.Router();
 const jsonBodyParser = express.json();
@@ -32,7 +32,7 @@ workoutsRouter
   .route("/:userId")
   .all(requireAuth, (req, res, next) => {
     if (req.params.userId == null) {
-      return res.status(400).json({error: "User or workouts does not exist"})
+      return res.status(400).json({ error: "User or workouts does not exist" });
     }
     WorkoutsService.getWorkoutByUserId(req.app.get("db"), req.params.userId)
       .then(workouts => {
@@ -40,21 +40,28 @@ workoutsRouter
           return res
             .status(400)
             .json({ error: "User or workouts do not exist" });
+        } else if (workouts == []) {
+          return res.status(200).json(workouts);
+        } else {
+          res.workouts = workouts;
         }
-        res.workouts = workouts;
         next();
       })
       .catch(next);
   })
   .get(jsonBodyParser, (req, res) => {
+   
     let workouts = WorkoutsService.organizeWorkouts(res.workouts);
     return res.json(workouts);
   })
-  .delete(jsonBodyParser, (req, res)=>{
-    const {workout_id}= req.body;
-    let workoutToBeDeleted = {workout_id}
-    WorkoutsService.deleteWorkout(req.app.get('db'), workoutToBeDeleted)
-    .then(()=> {return res.status(204).end()})
+  .delete(jsonBodyParser, (req, res) => {
+    const { workout_id } = req.body;
+    let workoutToBeDeleted = { workout_id };
+    WorkoutsService.deleteWorkout(req.app.get("db"), workoutToBeDeleted).then(
+      () => {
+        return res.status(204).end();
+      }
+    );
   })
   .post(jsonBodyParser, (req, res) => {
     const { workout_length, user_id, movements } = req.body;

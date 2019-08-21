@@ -5,14 +5,25 @@ const WorkoutsService = {
 
   search(db, searchObj) {
     let equipment = searchObj.equipment.replace(" ", "|");
-    //returns random number to generate workouts by
+    //returns random number to generate workouts by if time is greater than 15 min,
+    //if less than 15, num_exercises will be 2.
     let num_exercises = Math.floor(Math.random() * (5 - 3 + 1) + 3);
+    if (searchObj.workout_length >= 15){
     return db("movements")
       .select("*")
       .where(db.raw(`equipment SIMILAR TO '${equipment}'`))
       .orWhereNull("equipment")
       .orderByRaw("RANDOM()")
       .limit(num_exercises);
+    }
+    else {
+     return db("movements")
+      .select("*")
+      .where(db.raw(`equipment SIMILAR TO '${equipment}'`))
+      .orWhereNull("equipment")
+      .orderByRaw("RANDOM()")
+      .limit(2);
+    }
   },
   getWorkoutByUserId(db, user_id) {
     return db("workouts")
@@ -59,7 +70,8 @@ const WorkoutsService = {
 
     let mvtArray = [];
     //then takes only list of movements to new array and reduces to new object which
-    //filters out extra workout length and workout ID for consise display of workout
+    //filters out extra workout length and workout ID for consise display of workout, with movements
+    //listed in array of objects format
     for (let i = 0; i < listWorkouts.length; i++) {
       listWorkouts[i].forEach(workout => {
         mvtArray.push(workout);
@@ -112,11 +124,11 @@ const WorkoutsService = {
       .returning("*")
       .where("workout_id", "=", id);
   },
-  deleteWorkout(db, workoutId){
-    let id = workoutId.workout_id
-    return db('workouts_movements')
-    .where('workout_id', '=', id)
-    .delete()
+  deleteWorkout(db, workoutId) {
+    let id = workoutId.workout_id;
+    return db("workouts_movements")
+      .where("workout_id", "=", id)
+      .delete();
   }
 };
 
