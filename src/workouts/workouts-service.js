@@ -114,7 +114,6 @@ const WorkoutsService = {
   },
   deleteWorkout(db, workoutId){
     let id = workoutId.workout_id
-    console.log(id)
     return db('workouts_movements')
     .where('workout_id', '=', id)
     .delete()

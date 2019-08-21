@@ -17,7 +17,7 @@ workoutsRouter
     const searchObj = { workout_length, equipment };
     const requiredItem = { workout_length };
     for (const [key, value] of Object.entries(requiredItem)) {
-      if (value == null) {
+      if (value == null || value > 60 || value < 5) {
         return res
           .status(400)
           .json({ error: `Missing ${key} in request body` });
@@ -31,6 +31,9 @@ workoutsRouter
 workoutsRouter
   .route("/:userId")
   .all(requireAuth, (req, res, next) => {
+    if (req.params.userId == null) {
+      return res.status(400).json({error: "User or workouts does not exist"})
+    }
     WorkoutsService.getWorkoutByUserId(req.app.get("db"), req.params.userId)
       .then(workouts => {
         if (!workouts) {
@@ -48,11 +51,10 @@ workoutsRouter
     return res.json(workouts);
   })
   .delete(jsonBodyParser, (req, res)=>{
-    console.log(req.body)
     const {workout_id}= req.body;
     let workoutToBeDeleted = {workout_id}
     WorkoutsService.deleteWorkout(req.app.get('db'), workoutToBeDeleted)
-    .then(()=> res.status(204).end())
+    .then(()=> {return res.status(204).end()})
   })
   .post(jsonBodyParser, (req, res) => {
     const { workout_length, user_id, movements } = req.body;
@@ -71,12 +73,12 @@ workoutsRouter
       req.app.get("db"),
       newWorkoutRow
     ).then(newRow => {
-      WorkoutsService.insertNewWorkoutIntoWorkoutsMovements(
+      return WorkoutsService.insertNewWorkoutIntoWorkoutsMovements(
         req.app.get("db"),
         newRow.id,
         newWorkoutMovements
       ).then(() => {
-        WorkoutsService.getNewWorkout(req.app.get("db"), newRow.id).then(
+        return WorkoutsService.getNewWorkout(req.app.get("db"), newRow.id).then(
           rawWkt => {
             let newWorkout = WorkoutsService.organizeWorkouts(rawWkt);
             return res
