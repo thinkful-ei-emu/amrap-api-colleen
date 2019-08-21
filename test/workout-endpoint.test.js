@@ -2,7 +2,7 @@ const knex = require("knex");
 const app = require("../src/app");
 const helpers = require("./test-helpers");
 
-describe.only("Workouts endpoints", function() {
+describe("Workouts endpoints", function() {
   let db;
 
   const {

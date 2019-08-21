@@ -21,7 +21,7 @@ authRouter.post("/login", jsonBodyParser, (req, res, next) => {
         return res
           .status(400)
           .json({ error: "Incorrect username or password" });
-      return AuthService.comparePasswords(
+      AuthService.comparePasswords(
         loginUser.password,
         dbUser.password
       ).then(compare => {
