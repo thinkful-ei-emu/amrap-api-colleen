@@ -24,8 +24,7 @@ workoutsRouter
       }
     }
     WorkoutsService.search(req.app.get("db"), searchObj).then(result => {
-      let workouts = WorkoutsService.setReps(result)
-      return res.status(201).json(workouts);
+      return res.status(201).json(result);
     });
   });
 
