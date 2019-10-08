@@ -37,7 +37,6 @@ const WorkoutsService = {
         "movement_id",
         "equipment",
         "reps",
-        "side",
         "video"
       )
       .where({ user_id });

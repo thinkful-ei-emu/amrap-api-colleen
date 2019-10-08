@@ -88,7 +88,6 @@ workoutsRouter
         return WorkoutsService.getNewWorkout(req.app.get("db"), newRow.id).then(
           rawWkt => {
             let newWorkout = WorkoutsService.organizeWorkouts(rawWkt);
-            console.log(newWorkout)
             return res
               .status(201)
               .location(
