@@ -11,8 +11,8 @@ movementRouter
     });
   })
   .post("/", jsonBodyParser, (req, res) => {
-    const { movement_name, body_part, equipment, reps } = req.body;
-    const newMovement = { movement_name, body_part, equipment, reps };
+    const { movement_name, body_part, equipment, reps, video } = req.body;
+    const newMovement = { movement_name, body_part, equipment, reps, video };
     for (const field of ["movement_name", "body_part", "reps"])
       if (!req.body[field])
         return res

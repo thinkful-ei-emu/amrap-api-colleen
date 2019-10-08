@@ -36,7 +36,9 @@ const WorkoutsService = {
         "movement_name",
         "movement_id",
         "equipment",
-        "reps"
+        "reps",
+        "side",
+        "video"
       )
       .where({ user_id });
   },
@@ -51,10 +53,13 @@ const WorkoutsService = {
         "movement_name",
         "movement_id",
         "equipment",
-        "reps"
+        "reps",
+        "video"
       )
       .where({ workout_id });
   },
+  
+  
   organizeWorkouts(workouts) {
     //takes objects from join table and reduces to array of objects by workout ID
     let list = workouts.reduce(function(r, a) {
@@ -87,7 +92,8 @@ const WorkoutsService = {
             movement_name,
             reps,
             equipment,
-            workout_length
+            workout_length,
+            video
           }
         ) => {
           c[workout_id] = c[workout_id] || { workout_id, movements: [] };
@@ -95,7 +101,7 @@ const WorkoutsService = {
           c[workout_id].movements = c[workout_id].movements.concat(
             Array.isArray(movement_name)
               ? movement_name
-              : [{ movement_name: movement_name, reps, equipment, movement_id }]
+              : [{ movement_name: movement_name, reps, equipment, movement_id, video }]
           );
           return c;
         },

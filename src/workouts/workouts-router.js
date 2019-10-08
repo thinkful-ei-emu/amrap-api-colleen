@@ -24,7 +24,8 @@ workoutsRouter
       }
     }
     WorkoutsService.search(req.app.get("db"), searchObj).then(result => {
-      return res.status(201).json(result);
+      let workouts = WorkoutsService.setReps(result)
+      return res.status(201).json(workouts);
     });
   });
 
@@ -88,6 +89,7 @@ workoutsRouter
         return WorkoutsService.getNewWorkout(req.app.get("db"), newRow.id).then(
           rawWkt => {
             let newWorkout = WorkoutsService.organizeWorkouts(rawWkt);
+            console.log(newWorkout)
             return res
               .status(201)
               .location(

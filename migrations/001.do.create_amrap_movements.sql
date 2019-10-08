@@ -7,5 +7,6 @@ CREATE TABLE movements (
   movement_name TEXT NOT NULL,
   body_part part NOT NULL,
   equipment TEXT,
-  reps TEXT NOT NULL
+  reps TEXT NOT NULL,
+  video TEXT
 );
