@@ -9,6 +9,8 @@ const usersRouter = require('./users/users-router')
 const authRouter = require('./auth/auth-router')
 const movementRouter = require('./movements/movement-router')
 const app = express()
+app.use(cors())
+
 //if production, want morgan to change based on prod vs dev
 const morganOption = (NODE_ENV === 'production' 
  ? 'common' 
@@ -16,7 +18,6 @@ const morganOption = (NODE_ENV === 'production'
  
  app.use(morgan(morganOption))
  app.use(helmet())
- app.use(cors())
  
  app.use('/api/workouts', workoutsRouter)
  app.use('/api/users', usersRouter)
